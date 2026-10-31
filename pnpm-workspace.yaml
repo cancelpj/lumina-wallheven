@@ -1,0 +1,5 @@
+# pnpm 11 构建脚本白名单（Electron 二进制下载、esbuild、electron-winstaller 需要执行 postinstall）
+allowBuilds:
+  electron: true
+  esbuild: true
+  electron-winstaller: true

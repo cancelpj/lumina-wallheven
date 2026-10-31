@@ -1,0 +1,298 @@
+<!doctype html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+        vertical-align: middle;
+      }
+      .glass-panel {
+        backdrop-filter: blur(40px);
+        background: rgba(18, 19, 24, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .specular-edge {
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .soft-glow {
+        box-shadow:
+          0 24px 64px -12px rgba(0, 0, 0, 0.6),
+          0 0 1px rgba(255, 255, 255, 0.1);
+      }
+      .modal-overlay {
+        backdrop-filter: blur(20px);
+        background: rgba(248, 250, 251, 0.85);
+      }
+      .light-glass-modal {
+        backdrop-filter: blur(40px);
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+      .text-modal-primary {
+        color: rgb(32, 33, 36);
+      }
+      .text-modal-secondary {
+        color: rgba(32, 33, 36, 0.7);
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'secondary-fixed': '#f0dbff',
+              'tertiary-fixed-dim': '#3cddc7',
+              'surface-variant': '#34343a',
+              'inverse-primary': '#494bd6',
+              'inverse-surface': '#e3e2e9',
+              'muted-gray': '#404040',
+              background: '#121318',
+              'primary-container': '#8083ff',
+              'on-secondary-fixed': '#2c0051',
+              'on-primary-fixed-variant': '#2f2ebe',
+              'on-secondary-fixed-variant': '#6900b3',
+              'on-tertiary-fixed-variant': '#005047',
+              'on-error-container': '#ffdad6',
+              'secondary-fixed-dim': '#ddb7ff',
+              'on-surface-variant': '#c7c4d7',
+              'tertiary-fixed': '#62fae3',
+              'on-tertiary': '#003731',
+              'surface-container-highest': '#34343a',
+              'surface-dim': '#121318',
+              'on-primary-container': '#0d0096',
+              'on-secondary-container': '#d6a9ff',
+              'primary-fixed': '#e1e0ff',
+              'highlight-white': '#FFFFFF',
+              'on-primary-fixed': '#07006c',
+              'on-tertiary-fixed': '#00201c',
+              'error-container': '#93000a',
+              'on-secondary': '#490080',
+              'inverse-on-surface': '#2f3035',
+              'on-tertiary-container': '#000705',
+              surface: '#121318',
+              secondary: '#ddb7ff',
+              'surface-glass': 'rgba(25, 26, 31, 0.7)',
+              primary: '#c0c1ff',
+              'surface-container-lowest': '#0d0e13',
+              'on-error': '#690005',
+              tertiary: '#3cddc7',
+              'secondary-container': '#6f00be',
+              'surface-container': '#1e1f24',
+              'surface-tint': '#c0c1ff',
+              'surface-bright': '#38393e',
+              'on-surface': '#e3e2e9',
+              outline: '#908fa0',
+              'primary-fixed-dim': '#c0c1ff',
+              'surface-container-high': '#292a2f',
+              'border-glass': 'rgba(255, 255, 255, 0.12)',
+              'tertiary-container': '#008678',
+              'on-primary': '#1000a9',
+              'on-background': '#e3e2e9',
+              'surface-container-low': '#1a1b20',
+              'outline-variant': '#464554',
+              error: '#ffb4ab',
+              'accent-orange': '#FF7D4E',
+              'on-accent-orange': '#3D0E00'
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              '2xl': '1rem',
+              '3xl': '1.5rem',
+              full: '9999px'
+            },
+            spacing: {
+              base: '8px',
+              'container-margin-desktop': '40px',
+              gutter: '24px',
+              'card-gap': '16px',
+              'container-margin-mobile': '20px',
+              sidebar_width: '280px'
+            },
+            fontFamily: {
+              'headline-xl': ['Manrope'],
+              'headline-lg': ['Manrope'],
+              'headline-md': ['Manrope'],
+              'body-md': ['Inter'],
+              'body-sm': ['Inter'],
+              'label-caps': ['JetBrains Mono']
+            },
+            fontSize: {
+              'headline-xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '800' }],
+              'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' }],
+              'headline-md': ['20px', { lineHeight: '28px', fontWeight: '600' }],
+              'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+              'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+              'label-caps': ['12px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '500' }]
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-background text-on-surface font-body-md overflow-hidden">
+    <div
+      class="flex h-screen w-full relative"
+      style="
+        background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgMsCFRp3F0Rm-LLymphHGAQhe2mY8Xj3UnlfCcbl1XggnATZH7aSdPazX5Z6d2bXmRfCl_smxACxRJmpV8V9dA9XahKr4VSt9UyFDZaYIKZZLWKWLEJK8XmyuTeOTZDYOiZGZeAFsVFAjykBWWplazjHgBKIOyMePWdWDzeqXSZYnJjtTo3hFyv1b5DAIbDeiMkHiYUuq7PnLu8n1ezsmldrGpqp1DwYCMzTesSLRiS1IyTDskdz7lodc7FtM899bYnNAjkiXWi4i');
+        background-size: cover;
+        background-position: center;
+      "
+    >
+      <aside class="w-sidebar_width h-screen sticky left-0 top-0 bg-surface/60 backdrop-blur-xl border-r border-white/5 flex flex-col p-6 z-10">
+        <div class="mb-8">
+          <h1 class="font-headline-xl text-headline-lg text-primary">Wallpapers</h1>
+          <p class="font-body-sm text-on-surface-variant">4K Creative Gallery</p>
+        </div>
+        <nav class="flex flex-col gap-2">
+          <div class="bg-primary/10 text-primary rounded-full px-4 py-2 font-bold flex items-center gap-3"><span class="material-symbols-outlined" data-icon="language">language</span> Online Wallpapers</div>
+          <div class="text-on-surface-variant hover:text-on-surface px-4 py-2 hover:bg-white/5 rounded-full transition-colors flex items-center gap-3">
+            <span class="material-symbols-outlined" data-icon="trending_up">trending_up</span> Trending
+          </div>
+          <div class="text-on-surface-variant hover:text-on-surface px-4 py-2 hover:bg-white/5 rounded-full transition-colors flex items-center gap-3">
+            <span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span> Anime
+          </div>
+          <div class="text-on-surface-variant hover:text-on-surface px-4 py-2 hover:bg-white/5 rounded-full transition-colors flex items-center gap-3"><span class="material-symbols-outlined" data-icon="groups">groups</span> People</div>
+          <div class="text-on-surface-variant hover:text-on-surface px-4 py-2 hover:bg-white/5 rounded-full transition-colors flex items-center gap-3">
+            <span class="material-symbols-outlined" data-icon="favorite">favorite</span> Favorites
+          </div>
+        </nav>
+      </aside>
+      <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+        <header class="w-full h-16 sticky top-0 z-50 bg-surface/40 backdrop-blur-md border-b border-white/5 flex justify-between items-center px-container-margin-desktop">
+          <div class="flex items-center gap-8">
+            <span class="font-headline-lg text-headline-md text-on-surface">Lumina</span>
+            <nav class="flex gap-6">
+              <a class="text-primary border-b-2 border-primary pb-1 font-label-caps" href="#">SFW</a>
+              <a class="text-on-surface-variant hover:text-on-surface font-label-caps" href="#">Sketchy</a>
+              <a class="text-on-surface-variant hover:text-on-surface font-label-caps" href="#">NSFW</a>
+            </nav>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="bg-surface-variant/30 border border-white/10 rounded-full px-4 py-1.5 flex items-center gap-2">
+              <span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="search">search</span>
+              <input class="bg-transparent border-none focus:ring-0 text-body-sm w-48 text-on-surface" placeholder="Search 4K visuals..." type="text" />
+            </div>
+            <button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-opacity" data-icon="settings">settings</button>
+            <button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-opacity" data-icon="account_circle">account_circle</button>
+          </div>
+        </header>
+        <section class="p-container-margin-desktop grid grid-cols-3 gap-6">
+          <div class="aspect-[16/10] bg-surface-container rounded-xl border border-white/5 overflow-hidden group relative">
+            <img
+              class="w-full h-full object-cover"
+              data-alt="A mesmerizing 4K abstract digital landscape with flowing waves of iridescent purple and neon blue light. The composition is clean and minimalist, featuring smooth gradients and soft atmospheric depth. The lighting is diffused, emanating from within the fluid shapes, creating a calm yet high-tech aesthetic that aligns with premium macOS aesthetics."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA516m1Vo8uzlM8ySPowt0_gwDRQMyBVpR5s2TkyFWoCoDZRHiuwXML9Rrk4bUqKHQ9Cg9LfB3D0nPwPaNn68vvaTuK49-fL2HgxQWVram0DIfnnVcFNzcTE1Lm3M44wpUY84TLOynZ_J5_6RS1XxneaPZ0ELwnfA-PcbiVP8YMe_nJVleJ0YtMynB9C9msmxR_fZJrkM11hFTNAW-VCWfF9kPXlYVF1MhN-pVwcjvYq_CoMWv-JzwB_Lzbu2FuFA8PrAbfPB9CnTTS"
+            />
+          </div>
+          <div class="aspect-[16/10] bg-surface-container rounded-xl border border-white/5 overflow-hidden group relative">
+            <img
+              class="w-full h-full object-cover"
+              data-alt="A hyper-detailed 4K wallpaper depicting a serene mountain range at twilight, rendered in a stylized low-poly art style. The peaks are bathed in soft orange and deep violet hues, reflecting off a perfectly still alpine lake. The mood is peaceful and premium, utilizing a color palette of warm sunsets and cool shadows to define the clean, geometric landscape boundaries."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHgXk1lDI0YfKaoNER60UasOe8q2hhr8ejyiWXnkZdP8TXXPXxgiDL53yvd4ZzO0nqLHauzoJ99beorpeIwTw6dqmkdO9LQGFlKYPOjN2UCBW4n7KFv2jK7Vz6TDcmE4v-L5NFyQ8jM1DUGh0bwwhdf-iLYTo71vGTZ6UIljQ8sVwMTDHm5wCN108YP_Zjv24XJ4I6gG4Kqdm4iZBGjNMyuKuEDluYwmpqwhPaT2y5p6DFE2ul8xh-gxzP6vXaixy63N-sEGh0OCVZ"
+            />
+          </div>
+          <div class="aspect-[16/10] bg-surface-container rounded-xl border border-white/5 overflow-hidden group relative">
+            <img
+              class="w-full h-full object-cover"
+              data-alt="An elegant 4K digital artwork featuring a macro view of liquid mercury-like metal droplets suspended in zero gravity against a deep charcoal background. The reflective surfaces capture subtle glows of soft primary colors like red and blue. The visual style is ultra-modern and minimalist, emphasizing high-fidelity textures and crisp light reflections characteristic of creative professional interfaces."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxIc21ZjVgoZNPlKSTZ9jVks-wDSaj1LFaOF9i3cD3bXDJtr28lbzEdgnaTVYH85_lmVtOJ3jNOgdA1E_clzda-534KddZjTWuUx2XjbHRxrW35_XJnrKQv7-prUELIbO57f8oRN6eCQAztUybQCW7_cfRQG3y3sa9Yeo5dGAvxf7P_DaZsGLcejQxfMAeuKQMjuCeoT-0QYc7irix0kYr0qkkOZYkZtfoiAwVh3c_OrF0PwInlPd8DCS3beIsAM9sjpKRkE_suqez"
+            />
+          </div>
+        </section>
+      </main>
+      <div class="fixed inset-0 z-[100] flex items-center justify-center p-6 md:p-12 modal-overlay">
+        <div class="max-w-6xl w-full max-h-[92%] light-glass-modal soft-glow overflow-hidden flex flex-col md:flex-row relative rounded-2xl shadow-xl">
+          <div class="absolute top-6 left-6 flex gap-2 z-50">
+            <div class="w-3 h-3 rounded-full bg-[#FF5F57] shadow-inner"></div>
+            <div class="w-3 h-3 rounded-full bg-[#FEBC2E] shadow-inner"></div>
+            <div class="w-3 h-3 rounded-full bg-[#28C840] shadow-inner"></div>
+          </div>
+          <div class="flex-1 bg-black/5 flex items-center justify-center p-4">
+            <div class="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-black/5 group">
+              <img
+                class="w-full h-full object-cover"
+                data-alt="A premium 4K wallpaper featuring flowing crystalline structures with deep orange and vibrant purple light refractures. The scene is set in a dark, atmospheric void, highlighting the sharp, glass-like edges of the structures. The lighting creates a high-contrast, dramatic effect with soft glows radiating from the core of the gems, perfectly suited for a high-end desktop gallery experience."
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUQrc9dyQr3haYKMhAMIV5MY8Yj-kGkodv_Df0FyPAz_vvuiMG3KCRRg-oJxZN-ePB_T3eHJB3EIbWhUD8WlzJDTSIvys0nKgOPYMurN_714vmRvNKI_piLKJbEyFATFN_aZ6ZmxtcR1Bpj9-Ie432UwYvxA47MwL1KN5BOaRrLFFTITxs0WGeXYpiV6OwRW3OQA05H8zi-1BFyFTVBsPnbm21MbpeXyJefeN9TH4nIMB-kINVzMZyxvpQgImYcAWofzwON-85FnIX"
+              />
+              <div class="absolute bottom-6 right-6 flex gap-3">
+                <button class="bg-black/20 backdrop-blur-xl hover:bg-black/40 p-2.5 rounded-xl text-white transition-all border border-white/20">
+                  <span class="material-symbols-outlined" data-icon="zoom_in">zoom_in</span>
+                </button>
+                <button class="bg-black/20 backdrop-blur-xl hover:bg-black/40 p-2.5 rounded-xl text-white transition-all border border-white/20">
+                  <span class="material-symbols-outlined" data-icon="fullscreen">fullscreen</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="w-full md:w-[400px] p-8 flex flex-col gap-8 bg-white/10 backdrop-blur-2xl border-l border-black/5">
+            <div>
+              <h2 class="font-headline-lg text-headline-lg text-modal-primary mb-2">Crystalline Pulse</h2>
+              <p class="font-body-md text-modal-secondary flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-primary" data-icon="palette">palette</span>
+                By Lumina Studios
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-black/5 p-4 rounded-2xl border border-black/5">
+                <span class="block font-label-caps text-modal-secondary mb-1">RESOLUTION</span>
+                <span class="font-headline-md text-modal-primary">3840 × 2160</span>
+              </div>
+              <div class="bg-black/5 p-4 rounded-2xl border border-black/5">
+                <span class="block font-label-caps text-modal-secondary mb-1">CATEGORY</span>
+                <span class="font-headline-md text-modal-primary">Abstract</span>
+              </div>
+            </div>
+            <div>
+              <span class="block font-label-caps text-modal-secondary mb-4">METADATA TAGS</span>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-4 py-1.5 bg-black/5 border border-black/5 rounded-full font-body-sm text-modal-primary">4K UHD</span>
+                <span class="px-4 py-1.5 bg-black/5 border border-black/5 rounded-full font-body-sm text-modal-primary">Neon Orange</span>
+                <span class="px-4 py-1.5 bg-black/5 border border-black/5 rounded-full font-body-sm text-modal-primary">Glassmorphism</span>
+                <span class="px-4 py-1.5 bg-black/5 border border-black/5 rounded-full font-body-sm text-modal-primary">Fluid</span>
+              </div>
+            </div>
+            <div class="mt-auto flex flex-col gap-3">
+              <button class="w-full py-4 bg-accent-orange text-on-accent-orange rounded-2xl font-headline-md flex items-center justify-center gap-3 hover:brightness-110 transition-all shadow-lg shadow-accent-orange/20">
+                <span class="material-symbols-outlined" data-icon="download">download</span>
+                Download Wallpapers
+              </button>
+              <div class="flex gap-3">
+                <button class="flex-1 py-4 bg-black/5 border border-black/5 rounded-2xl text-modal-primary font-headline-md flex items-center justify-center gap-3 hover:bg-black/10 transition-all">
+                  <span class="material-symbols-outlined text-accent-orange" data-icon="favorite" data-weight="fill" style="font-variation-settings: 'FILL' 1">favorite</span>
+                  Favorite
+                </button>
+                <button class="w-16 py-4 bg-black/5 border border-black/5 rounded-2xl text-modal-primary flex items-center justify-center hover:bg-black/10 transition-all">
+                  <span class="material-symbols-outlined" data-icon="share">share</span>
+                </button>
+              </div>
+            </div>
+            <div class="pt-6 border-t border-black/5">
+              <div class="flex items-center justify-between">
+                <div class="flex -space-x-3">
+                  <div class="w-10 h-10 rounded-full border-2 border-white/50 bg-primary-container shadow-lg"></div>
+                  <div class="w-10 h-10 rounded-full border-2 border-white/50 bg-secondary-container shadow-lg"></div>
+                  <div class="w-10 h-10 rounded-full border-2 border-white/50 bg-accent-orange shadow-lg"></div>
+                </div>
+                <span class="font-body-sm text-modal-secondary">Used by 1.2k creatives</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

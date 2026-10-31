@@ -1,0 +1,43 @@
+# electron-builder 打包配置（对应原 Tauri 的 bundle 配置）
+appId: com.lumina.desktop
+productName: Lumina
+copyright: Copyright © 2025 HelpToMe
+
+directories:
+  buildResources: resources
+  output: release
+
+files:
+  - out/**
+  - "!**/.vscode/*"
+  - "!src/*"
+  - "!electron/*"
+  - "!docs/*"
+
+asar: true
+npmRebuild: false
+
+mac:
+  target:
+    - dmg
+    - zip
+  icon: resources/icon.icns
+  category: public.app-category.photography
+  darkModeSupport: true
+
+win:
+  target:
+    - nsis
+  icon: resources/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+
+linux:
+  target:
+    - AppImage
+  icon: resources/icon.png
+  category: Graphics
+  maintainer: HelpToMe

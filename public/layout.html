@@ -1,0 +1,352 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: rgb(241, 243, 244);
+        overflow: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      .font-headline {
+        font-family: 'Manrope', sans-serif;
+        color: rgb(32, 33, 36);
+      }
+      .glass-edge {
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+      .wallpaper-card-overlay {
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.6) 0%, transparent 60%);
+        backdrop-filter: blur(40px);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'surface-bright': '#f8fafb',
+              'outline-variant': '#c7c4d7',
+              'on-primary-fixed': '#07006c',
+              primary: '#4648d4',
+              'on-primary': '#ffffff',
+              'on-surface': 'rgb(32, 33, 36)',
+              secondary: '#575992',
+              'on-tertiary-fixed-variant': '#703700',
+              'on-background': 'rgb(32, 33, 36)',
+              'primary-container': '#6063ee',
+              'on-primary-container': '#fffbff',
+              'on-error-container': '#93000a',
+              outline: '#767586',
+              'surface-container-low': '#f2f4f5',
+              'tertiary-container': '#b55d00',
+              'inverse-on-surface': '#eff1f2',
+              'error-container': '#ffdad6',
+              'surface-container-lowest': '#ffffff',
+              'on-secondary-container': '#494b83',
+              'surface-container': '#eceeef',
+              'primary-fixed-dim': '#c0c1ff',
+              'on-surface-variant': '#464554',
+              error: '#ba1a1a',
+              'primary-fixed': '#e1e0ff',
+              'on-tertiary-container': '#fffbff',
+              'on-primary-fixed-variant': '#2f2ebe',
+              surface: '#f8fafb',
+              'secondary-fixed': '#e1e0ff',
+              'on-tertiary': '#ffffff',
+              'secondary-container': '#bdbefe',
+              'on-tertiary-fixed': '#301400',
+              'tertiary-fixed': '#ffdcc5',
+              'on-error': '#ffffff',
+              'surface-container-high': '#e6e8e9',
+              'on-secondary': '#ffffff',
+              'surface-dim': '#d8dadb',
+              'inverse-surface': '#2e3132',
+              'tertiary-fixed-dim': '#ffb783',
+              'secondary-fixed-dim': '#c0c1ff',
+              'inverse-primary': '#c0c1ff',
+              tertiary: '#904900',
+              'surface-tint': '#494bd6',
+              'surface-variant': '#e1e3e4',
+              'on-secondary-fixed': '#13144a',
+              'on-secondary-fixed-variant': '#404178',
+              background: 'rgb(241, 243, 244)',
+              'border-glass': 'rgba(0, 0, 0, 0.08)'
+            },
+            borderRadius: {
+              DEFAULT: '0.25rem',
+              lg: '0.5rem',
+              xl: '0.75rem',
+              full: '9999px'
+            },
+            spacing: {
+              base: '8px',
+              'container-margin-desktop': '40px',
+              gutter: '24px',
+              'card-gap': '16px',
+              'container-margin-mobile': '20px',
+              sidebar_width: '280px'
+            },
+            fontFamily: {
+              'headline-xl': ['Manrope'],
+              'headline-lg-mobile': ['Manrope'],
+              'body-md': ['Inter'],
+              'headline-lg': ['Manrope'],
+              'label-caps': ['JetBrains Mono'],
+              'body-sm': ['Inter']
+            },
+            fontSize: {
+              'headline-xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '800' }],
+              'headline-lg-mobile': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+              'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+              'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '700' }],
+              'label-caps': ['12px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '500' }],
+              'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }]
+            }
+          }
+        }
+      }
+    </script>
+    <style data-stitch-cursor=""></style>
+    <style data-stitch-scroll-lock=""></style>
+  </head>
+  <body class="flex h-screen overflow-hidden text-on-surface bg-background">
+    <!-- Background Layer -->
+    <div class="fixed inset-0 z-0 overflow-hidden">
+      <img
+        class="w-full h-full object-cover scale-110 blur-3xl opacity-30"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgMsCFRp3F0Rm-LLymphHGAQhe2mY8Xj3UnlfCcbl1XggnATZH7aSdPazX5Z6d2bXmRfCl_smxACxRJmpV8V9dA9XahKr4VSt9UyFDZaYIKZZLWKWLEJK8XmyuTeOTZDYOiZGZeAFsVFAjykBWWplazjHgBKIOyMePWdWDzeqXSZYnJjtTo3hFyv1b5DAIbDeiMkHiYUuq7PnLu8n1ezsmldrGpqp1DwYCMzTesSLRiS1IyTDskdz7lodc7FtM899bYnNAjkiXWi4i"
+      />
+    </div>
+    <!-- Sidebar Navigation -->
+    <aside class="w-sidebar_width h-screen sticky left-0 top-0 z-20 flex flex-col p-6 shadow-xl m-4 rounded-2xl border border-black/5 bg-white/40 backdrop-blur-[40px]">
+      <div class="mb-10 px-2">
+        <h1 class="text-headline-xl text-primary leading-tight">Lumina</h1>
+        <p class="text-body-sm text-on-surface-variant font-medium">4K Creative Gallery</p>
+      </div>
+      <nav class="flex-1 space-y-2">
+        <a class="flex items-center gap-3 bg-primary text-on-primary rounded-xl px-4 py-3 font-semibold transition-all duration-300 border border-primary/20 shadow-lg shadow-primary/20" href="#">
+          <span class="material-symbols-outlined" data-icon="language">language</span>
+          <span class="text-body-md">Online Wallpapers</span>
+        </a>
+        <a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-black/5 rounded-xl px-4 py-3 transition-all duration-300" href="#">
+          <span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+          <span class="text-body-md">Trending</span>
+        </a>
+        <a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-black/5 rounded-xl px-4 py-3 transition-all duration-300" href="#">
+          <span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+          <span class="text-body-md">Anime</span>
+        </a>
+        <a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-black/5 rounded-xl px-4 py-3 transition-all duration-300" href="#">
+          <span class="material-symbols-outlined" data-icon="groups">groups</span>
+          <span class="text-body-md">People</span>
+        </a>
+        <a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-black/5 rounded-xl px-4 py-3 transition-all duration-300" href="#">
+          <span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+          <span class="text-body-md">Favorites</span>
+        </a>
+        <a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-black/5 rounded-xl px-4 py-3 transition-all duration-300" href="#">
+          <span class="material-symbols-outlined" data-icon="download">download</span>
+          <span class="text-body-md">Downloads</span>
+        </a>
+      </nav>
+      <div class="mt-auto pt-6 border-t border-black/5">
+        <a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface hover:bg-black/5 rounded-xl px-4 py-3 transition-all mb-4" href="#">
+          <span class="material-symbols-outlined" data-icon="info">info</span>
+          <span class="text-body-md">About</span>
+        </a>
+        <div class="flex items-center gap-3 px-4 py-3 bg-surface-container-low rounded-2xl border border-black/5">
+          <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
+            <img
+              alt="User profile"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbD695TQw9rqMEPG-hAyZ399j2Gb0QS9NmCW_FkouO6ziwiWkxocgmqSJt2_SmwuTJD8mJDw4LbaATG3GfdSdyE5Px0Y4oZPAO_pYeWmgz21reJJW8taCpep_S6kj2NOFJKtLrKMdD34vd7PXBWA2Z9JpNpZvLs1dBQHz3lNINLTfpn1uxe8u1FzJCnv2oISLuLBYwEBlRD0SXGPyoMpBKVUROgjumO-BuqOodL-D6sIBwrSfdO_HqRHWghJl6_8VoKIVhpEWN0-iR"
+              class=""
+            />
+          </div>
+          <div class="flex flex-col">
+            <span class="text-body-sm font-bold text-on-surface">Erik V.</span>
+            <span class="text-label-caps text-[10px] text-primary/70 uppercase tracking-widest">Pro Member</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="flex-1 relative z-10 flex flex-col h-screen overflow-hidden">
+      <!-- Top Navigation Bar -->
+      <header class="w-full h-20 sticky top-0 z-50 flex justify-between items-center px-10 m-4 rounded-2xl border border-black/5 bg-white/40 backdrop-blur-[40px]">
+        <div class="flex items-center gap-6">
+          <!-- Content Tags -->
+          <div class="flex bg-surface-container-high/30 p-1 rounded-xl border border-black/5">
+            <button class="px-5 py-1.5 rounded-lg text-label-caps bg-primary text-on-primary font-bold shadow-md shadow-primary/10">SFW</button>
+            <button class="px-5 py-1.5 rounded-lg text-label-caps text-on-surface-variant hover:text-on-surface transition-colors font-medium">Sketchy</button>
+            <button class="px-5 py-1.5 rounded-lg text-label-caps text-on-surface-variant hover:text-on-surface transition-colors font-medium">NSFW</button>
+          </div>
+          <!-- Dropdown Selects -->
+          <div class="flex items-center gap-3">
+            <button class="flex items-center gap-2 bg-black/5 hover:bg-black/10 px-4 py-2 rounded-xl border border-black/5 transition-all">
+              <span class="text-label-caps text-on-surface-variant">Sort:</span>
+              <span class="text-label-caps text-on-surface font-bold">Top</span>
+              <span class="material-symbols-outlined text-[18px] text-on-surface-variant" data-icon="expand_more">expand_more</span>
+            </button>
+            <button class="flex items-center gap-2 bg-black/5 hover:bg-black/10 px-4 py-2 rounded-xl border border-black/5 transition-all">
+              <span class="text-label-caps text-on-surface-variant">Res:</span>
+              <span class="text-label-caps text-on-surface font-bold">4K+</span>
+              <span class="material-symbols-outlined text-[18px] text-on-surface-variant" data-icon="expand_more">expand_more</span>
+            </button>
+          </div>
+        </div>
+        <!-- Search and Actions -->
+        <div class="flex items-center gap-6 flex-1 max-w-xl justify-end">
+          <div class="relative w-full max-w-sm">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+            <input
+              class="w-full bg-white/60 border border-black/5 rounded-full py-2.5 pl-12 pr-4 text-body-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all backdrop-blur-xl placeholder:text-on-surface-variant/50"
+              placeholder="Explore 4K wallpapers..."
+              type="text"
+            />
+          </div>
+          <div class="flex items-center gap-5 text-on-surface-variant">
+            <button class="hover:text-primary transition-colors">
+              <span class="material-symbols-outlined" data-icon="settings">settings</span>
+            </button>
+            <button class="hover:text-primary transition-colors">
+              <span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+            </button>
+          </div>
+        </div>
+      </header>
+      <!-- Gallery Grid -->
+      <div class="flex-1 overflow-y-auto p-10 custom-scrollbar">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Wallpaper Card 1 -->
+          <div class="group relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-black/5 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:border-primary/40">
+            <img
+              class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3Pl51IXOaPSp5aS2u2v8tMGT5NDEnwg6BQa9CF6juGgqOkxsS7o0IPvOIvvzKhpzz30wkemW13CpnqPG8AHpZ7OfBQJfQ7gVBO4nSY-KzcI-jQVEoSknW_hYtqnp4Po9ra3Kg9Euq2U4J-8WAogUOyNl9sRuni0pxOCgIR1cpZ0qWM5ry8L5bC484Yhet5re6ijK8jNKWIxkr7yCnf5_IL18QJ_rFO5kfIiws2nNhebUCR8ouxiEuSJf9esNFVbSf1nXvOT76_jiR"
+            />
+            <div class="absolute inset-0 wallpaper-card-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 backdrop-blur-[40px]">
+              <div class="flex justify-between items-center text-on-surface">
+                <span class="text-label-caps text-on-surface-variant font-bold">3840 x 2160</span>
+                <button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg">
+                  <span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Wallpaper Card 2 -->
+          <div class="group relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-black/5 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:border-primary/40">
+            <img
+              class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkktG0Oh9WhtnW-eEpMPsjaSZisvjr8LDxpXMesR8IYfzNxZqwf3rIkxIDfb7MnP1xcaZ7_IevWERKyLBTiZBU9HL3hskCIfIGLP2etHdB2HKw9MpZ-eBC4KeKhZB6jZz60XAYJYJ8oFUi-keXlJ-Mwpff1JR4WlDMJgE3nJUoKvIWqQIFESI6cuoTHYWpzn31W_ul_gSt3Zh8igr3l4l7VZcnjd0rYbCmMLIr3EOCBa3FqvxLEVhpODCGlXy-92pjW73FsdY3RTBh"
+            />
+            <div class="absolute inset-0 wallpaper-card-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 backdrop-blur-[40px]">
+              <div class="flex justify-between items-center text-on-surface">
+                <span class="text-label-caps text-on-surface-variant font-bold">5120 x 2880</span>
+                <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all">
+                  <span class="material-symbols-outlined text-[20px]" data-icon="favorite">favorite</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Wallpaper Card 3 -->
+          <div class="group relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-black/5 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:border-primary/40">
+            <img
+              class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyk6WHOyypxkTI7YEV7WWnFyem3ZYQhcI10Xvv5xtDCfv1UEQwZylINIf_n2jvo8H-PCC0X-DrVAzDXOxuBv7VZsYZlScR-rfM-f975H0FkKsDKE2PqSowTfEDFkVUenPFT738qsztrOgK-WWwZek-WVYjhTFofhKeT-AjPPUlVNr_DzdpJCwRQ-cdwPRJiV5-4QsLiurZmrOyNgv9sImkBOS4KbC5ufi_kiTkiO1_UHvcptfWquB69NAMNIcpNbYe_tqwDKuQATC9"
+            />
+            <div class="absolute inset-0 wallpaper-card-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 backdrop-blur-[40px]">
+              <div class="flex justify-between items-center text-on-surface">
+                <span class="text-label-caps text-on-surface-variant font-bold">7680 x 4320</span>
+                <button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg">
+                  <span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Wallpaper Card 4 -->
+          <div class="group relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-black/5 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:border-primary/40">
+            <img
+              class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX-2LLbNY-5AedanoMdRFKb-0Fx2uujjEROMfmW052QkxvHPsSPm5kiuaSHgKh3Z6lJ98rhKvY8nfOM7DXNYx_ixPUzU9ug-Mt6-lTvCOH4Xkl_GQ9UuKF4QcgwGOZNn_42CH_40LoRynkUeNmR56cQ2NLtkilpMRyUV4X_XirFGjkfmS8Kn-SqXGqp7ry_rTSHIFRWradkMXCTCGs_OzlVcXZXLssvfdRvCUKhPJDmZRhYPG4l5P5zAfWpqobQioDqwagMe9fnO7F"
+            />
+            <div class="absolute inset-0 wallpaper-card-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 backdrop-blur-[40px]">
+              <div class="flex justify-between items-center text-on-surface">
+                <span class="text-label-caps text-on-surface-variant font-bold">3840 x 2160</span>
+                <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all">
+                  <span class="material-symbols-outlined text-[20px]" data-icon="favorite">favorite</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Wallpaper Card 5 -->
+          <div class="group relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-black/5 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:border-primary/40">
+            <img
+              class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtF9VWrFRyhAvrY52C0g9ZvZMETszZKotenWPhvfS2T9-mMbRtICwemGDrBjbc5kmidgH_i_q3mgi5E2_pXKHXpI9cO5c15eWidxx9LGVQSXJKPdMJ4yO7rtpduH3WiuBQYMl2HsEAgysGeFEUFtqmo3FW2K7Bs8XN-oqMjpReBCXIZdTPYiJPXL9b3VxIRHDRSZW7FdcXzQzu040DAGD1-vsvHskJBoy-7nUH3apLdCJ3ZBWtDfiCVWEt93e32uk6RrnE6THaGWVt"
+            />
+            <div class="absolute inset-0 wallpaper-card-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 backdrop-blur-[40px]">
+              <div class="flex justify-between items-center text-on-surface">
+                <span class="text-label-caps text-on-surface-variant font-bold">Ultrawide</span>
+                <button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg">
+                  <span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Wallpaper Card 6 -->
+          <div class="group relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-black/5 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:border-primary/40">
+            <img
+              class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkwcls2QFDWFwa_WDnB7ZorBTUFDSWUz1pLcK3iNHS7K4PnRKNliYWIBK99Lfh4CW7JbmCbFugS8PdulYL-f_ADBxnXLvceU3FvFXzU93WtFwMq_QqZ07FdEJflJZB0WQXu9mxQzaKcbK-rSa7_8F3Si1k3r1Ozqj3NpPmPn0xXDt2y1PYQAfZtrSdCLNcZtuYuw6Bz-VXsYVBHFi4bf7OPNChKJjOi9dWGYKr7KUK9xpia45rR85OhluSPMi4FHmhgdaBrrTKfk72"
+            />
+            <div class="absolute inset-0 wallpaper-card-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 backdrop-blur-[40px]">
+              <div class="flex justify-between items-center text-on-surface">
+                <span class="text-label-caps text-on-surface-variant font-bold">4K Portrait</span>
+                <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all">
+                  <span class="material-symbols-outlined text-[20px]" data-icon="favorite">favorite</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Wallpaper Card 7 -->
+          <div class="group relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-black/5 shadow-xl transition-all duration-500 hover:scale-[1.02] hover:border-primary/40">
+            <img
+              class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_nofWANceo1ccpYdRt8t_AJA6PPxAzXRdFWchdgnl3oFWZTOydmG5WMDyW4BYeyludQRpXRkLwrd-bBIPqFAGHo47gelATONMJICby6cv9iO8WU6OY7DO3__-4ew_gDBJkvxduKXXP84UO9lQvOzJ0v7d9I1wI_w1MotB5DRvEv11_UXUncGmK13GeO9k_uSAdJtLEpEIF4LEugXU3ZQRCCYXhT8ZtfvG2GK4QV5Bkn6EtRngW51V6wX1ly53ticmeAZR59sTyZwq"
+            />
+            <div class="absolute inset-0 wallpaper-card-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 backdrop-blur-[40px]">
+              <div class="flex justify-between items-center text-on-surface">
+                <span class="text-label-caps text-on-surface-variant font-bold">3840 x 2400</span>
+                <button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg">
+                  <span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Floating Action Button (FAB) -->
+      <button class="fixed bottom-10 right-10 w-16 h-16 rounded-full bg-primary text-on-primary shadow-[0_0_40px_rgba(70,72,212,0.3)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 z-50">
+        <span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+      </button>
+    </main>
+  </body>
+</html>

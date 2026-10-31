@@ -1,0 +1,284 @@
+@import "tailwindcss";
+
+/* ============================================
+   Lumina — Light Glassmorphism Design System
+   1:1 matched from layout.html + imageDetail.html
+   ============================================ */
+
+@theme {
+  /* ── Color System (from layout.html tailwind.config) ── */
+  --color-surface-bright: #f8fafb;
+  --color-outline-variant: #c7c4d7;
+  --color-on-primary-fixed: #07006c;
+  --color-primary: #4648d4;
+  --color-on-primary: #ffffff;
+  --color-on-surface: rgb(32, 33, 36);
+  --color-secondary: #575992;
+  --color-on-tertiary-fixed-variant: #703700;
+  --color-on-background: rgb(32, 33, 36);
+  --color-primary-container: #6063ee;
+  --color-on-primary-container: #fffbff;
+  --color-on-error-container: #93000a;
+  --color-outline: #767586;
+  --color-surface-container-low: #f2f4f5;
+  --color-tertiary-container: #b55d00;
+  --color-inverse-on-surface: #eff1f2;
+  --color-error-container: #ffdad6;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-secondary-container: #494b83;
+  --color-surface-container: #eceeef;
+  --color-primary-fixed-dim: #c0c1ff;
+  --color-on-surface-variant: #464554;
+  --color-error: #ba1a1a;
+  --color-primary-fixed: #e1e0ff;
+  --color-on-tertiary-container: #fffbff;
+  --color-on-primary-fixed-variant: #2f2ebe;
+  --color-surface: #f8fafb;
+  --color-secondary-fixed: #e1e0ff;
+  --color-on-tertiary: #ffffff;
+  --color-secondary-container: #bdbefe;
+  --color-on-tertiary-fixed: #301400;
+  --color-tertiary-fixed: #ffdcc5;
+  --color-on-error: #ffffff;
+  --color-surface-container-high: #e6e8e9;
+  --color-on-secondary: #ffffff;
+  --color-surface-dim: #d8dadb;
+  --color-inverse-surface: #2e3132;
+  --color-tertiary-fixed-dim: #ffb783;
+  --color-secondary-fixed-dim: #c0c1ff;
+  --color-inverse-primary: #c0c1ff;
+  --color-tertiary: #904900;
+  --color-surface-tint: #494bd6;
+  --color-surface-variant: #e1e3e4;
+  --color-on-secondary-fixed: #13144a;
+  --color-on-secondary-fixed-variant: #404178;
+  --color-background: rgb(241, 243, 244);
+  --color-border-glass: rgba(0, 0, 0, 0.08);
+
+  /* ── Spacing ── */
+  --spacing-base: 8px;
+  --spacing-container-margin-desktop: 40px;
+  --spacing-gutter: 24px;
+  --spacing-card-gap: 16px;
+  --spacing-container-margin-mobile: 20px;
+  --spacing-sidebar-width: 280px;
+  --spacing-sidebar_width: 280px;
+
+  /* ── Font Families ── */
+  --font-headline-xl: 'Manrope', sans-serif;
+  --font-headline-lg: 'Manrope', sans-serif;
+  --font-headline-md: 'Manrope', sans-serif;
+  --font-body-md: 'Inter', sans-serif;
+  --font-body-sm: 'Inter', sans-serif;
+  --font-label-caps: 'JetBrains Mono', monospace;
+
+  /* ── Font Sizes ── */
+  --text-headline-xl: 48px;
+  --text-headline-xl--line-height: 56px;
+  --text-headline-xl--letter-spacing: -0.02em;
+  --text-headline-xl--font-weight: 800;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 40px;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-md: 20px;
+  --text-headline-md--line-height: 28px;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-body-sm--font-weight: 400;
+
+  --text-label-caps: 12px;
+  --text-label-caps--line-height: 16px;
+  --text-label-caps--letter-spacing: 0.05em;
+  --text-label-caps--font-weight: 500;
+
+  /* ── Border Radius ── */
+  --radius-DEFAULT: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+/*
+ * All custom styles MUST be wrapped in @layer so Tailwind v4 utilities
+ * (in @layer utilities) can override them. Unlayered styles always beat
+ * layered styles per CSS Cascade Layers spec, breaking text-primary etc.
+ */
+
+/* ============================================
+   Base Reset
+   ============================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body, #app {
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    border-radius: 24px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: rgb(32, 33, 36);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #app {
+    contain: paint;
+  }
+
+  h1, h2, h3, .font-headline {
+    font-family: 'Manrope', sans-serif;
+    color: rgb(32, 33, 36);
+  }
+
+  /* ── Material Symbols Base ── */
+  .material-symbols-outlined {
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+    vertical-align: middle;
+  }
+
+  /* ── Scrollbar ── */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
+  .app-window-shell {
+    position: relative;
+    border-radius: 24px;
+    isolation: isolate;
+    contain: paint;
+  }
+
+  /* ── Animations ── */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-scale {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* ── Page Transitions ── */
+  .page-enter-active {
+    transition: opacity 0.3s ease-out,
+                transform 0.3s ease-out;
+  }
+  .page-enter-from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .page-leave-active {
+    transition: opacity 0.2s ease-out,
+                transform 0.2s ease-out;
+  }
+  .page-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  /* ── Reduced Motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================
+   Component Classes
+   ============================================ */
+
+@layer components {
+  .glass-edge {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .wallpaper-card-overlay {
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.18) 48%, transparent 82%);
+    backdrop-filter: blur(10px);
+  }
+
+  .toast-glass {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(24px);
+    box-shadow:
+      0 18px 48px -18px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    backdrop-filter: blur(8px);
+    background: rgba(248, 250, 251, 0.38);
+  }
+
+  .light-glass-modal {
+    backdrop-filter: blur(22px) saturate(1.08);
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.42);
+  }
+
+  .text-modal-primary {
+    color: rgb(32, 33, 36);
+  }
+
+  .text-modal-secondary {
+    color: rgba(32, 33, 36, 0.7);
+  }
+
+  .soft-glow {
+    box-shadow:
+      0 24px 64px -16px rgba(0, 0, 0, 0.42),
+      0 0 1px rgba(255, 255, 255, 0.28);
+  }
+
+  .specular-edge {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
