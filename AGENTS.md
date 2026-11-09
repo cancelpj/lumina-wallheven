@@ -28,8 +28,9 @@ No test suite or linter is configured.
 | File | Purpose |
 |------|---------|
 | [lib.rs](src-tauri/src/lib.rs) | App setup, plugin init, command registration. DevTools shortcuts: `Cmd/Ctrl+J` open, `Cmd/Ctrl+K` close (debug only). |
-| [commands.rs](src-tauri/src/commands.rs) | All `#[tauri::command]` handlers: `download_image`, `cancel_download`, `get_downloads`, `clear_download`, `delete_download_file`, `open_download_folder`, `reveal_download_file`, `get_download_dir`, `set_download_dir`, `choose_download_dir`, `get_app_data_path`, `fetch_wallpaper_image`, `fetch_wallhaven_api` |
+| [commands.rs](src-tauri/src/commands.rs) | All `#[tauri::command]` handlers: `download_image`, `cancel_download`, `get_downloads`, `clear_download`, `delete_download_file`, `open_download_folder`, `reveal_download_file`, `get_download_dir`, `set_download_dir`, `choose_download_dir`, `get_app_data_path`, `fetch_wallpaper_image`, `set_desktop_wallpaper`, `fetch_wallhaven_api` |
 | [download.rs](src-tauri/src/download.rs) | `DownloadState` (managed as `Arc<Mutex<>>`), streaming download with per-100ms progress events, cancellation support |
+| [wallpaper.rs](src-tauri/src/wallpaper.rs) | `WallpaperMode` (fill / fit / stretch / tile / center / span / system) and the per-platform setter. Windows goes straight through Win32 (`windows` crate): writes `HKCU\Control Panel\Desktop` (`Wallpaper`, `WallpaperStyle`, `TileWallpaper`) then calls `SystemParametersInfoW(SPI_SETDESKWALLPAPER)`. macOS uses `osascript`, Linux uses `gsettings` |
 
 **Tauri plugins**: `fs`, `dialog`, `global-shortcut`, `log` (debug only)
 
