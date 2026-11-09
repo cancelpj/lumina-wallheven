@@ -1,5 +1,7 @@
 mod commands;
 mod download;
+mod thumbnail;
+mod wallpaper;
 
 use download::DownloadState;
 use std::sync::Arc;
@@ -41,6 +43,7 @@ pub fn run() {
             commands::get_cache_info,
             commands::clear_app_cache,
             commands::fetch_wallpaper_image,
+            commands::fetch_wallpaper_thumbnail,
             commands::set_desktop_wallpaper,
             commands::fetch_wallhaven_api,
         ])

@@ -1,11 +1,43 @@
 use crate::download::{DownloadProgress, DownloadRequest, DownloadState};
+use crate::thumbnail;
 use serde::Serialize;
 use std::path::{Path, PathBuf};
-use std::process::Command;
-use std::sync::Arc;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, OnceLock};
 use tauri::{AppHandle, Emitter, Manager, State};
 use tauri_plugin_dialog::DialogExt;
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, Semaphore};
+
+/// Upper bound for the full resolution image cache on disk.
+const IMAGE_CACHE_MAX_BYTES: u64 = 512 * 1024 * 1024;
+
+/// How many cache writes to let through before re-checking the cache size.
+const PRUNE_INTERVAL: usize = 25;
+
+/// How many thumbnails may be decoded at the same time.
+///
+/// Decoding a 4K original takes a few hundred milliseconds and a few tens of
+/// megabytes, so an unbounded number of them in flight would spike memory.
+const THUMB_CONCURRENCY: usize = 2;
+
+static PRUNE_COUNTER: AtomicUsize = AtomicUsize::new(0);
+static THUMB_SEMAPHORE: OnceLock<Semaphore> = OnceLock::new();
+
+fn thumb_semaphore() -> &'static Semaphore {
+    THUMB_SEMAPHORE.get_or_init(|| Semaphore::new(THUMB_CONCURRENCY))
+}
+
+/// Trim `dir` back under `max_bytes` every few writes.
+///
+/// Scanning the directory on every request would be wasteful; the cache only
+/// needs a periodic sweep.
+async fn maybe_prune(dir: PathBuf, max_bytes: u64) {
+    if PRUNE_COUNTER.fetch_add(1, Ordering::Relaxed) % PRUNE_INTERVAL != 0 {
+        return;
+    }
+
+    let _ = tauri::async_runtime::spawn_blocking(move || thumbnail::prune(&dir, max_bytes)).await;
+}
 
 #[derive(Serialize)]
 pub struct CacheInfo {
@@ -267,10 +299,55 @@ pub async fn fetch_wallpaper_image(app: AppHandle, path: String) -> Result<Strin
     Ok(local_path.to_string_lossy().to_string())
 }
 
+/// Generate (or reuse) a bounded thumbnail for a local image file.
+///
+/// The webview has to decode whatever it renders, so handing it a 4K original
+/// costs ~33 MB of bitmap memory per image. This returns a downscaled JPEG
+/// instead, which is what the list views should use.
 #[tauri::command]
-pub async fn set_desktop_wallpaper(app: AppHandle, path: String) -> Result<(), String> {
+pub async fn fetch_wallpaper_thumbnail(app: AppHandle, path: String) -> Result<String, String> {
+    let cache_dir = app_cache_dir(&app)?.join("thumbs");
+
+    tokio::fs::create_dir_all(&cache_dir)
+        .await
+        .map_err(|e| format!("Failed to create thumbnail cache dir: {e}"))?;
+
+    let source = PathBuf::from(&path);
+    let dest = cache_dir.join(format!("{}.jpg", thumbnail::cache_key(&source)));
+
+    if !dest.exists() {
+        let src = source.clone();
+        let dst = dest.clone();
+
+        let _permit = thumb_semaphore()
+            .acquire()
+            .await
+            .map_err(|e| format!("Thumbnail semaphore closed: {e}"))?;
+
+        tauri::async_runtime::spawn_blocking(move || thumbnail::generate(&src, &dst))
+            .await
+            .map_err(|e| format!("Thumbnail task failed: {e}"))??;
+    }
+
+    maybe_prune(cache_dir, thumbnail::THUMB_CACHE_MAX_BYTES).await;
+
+    Ok(dest.to_string_lossy().to_string())
+}
+
+#[tauri::command]
+pub async fn set_desktop_wallpaper(
+    app: AppHandle,
+    path: String,
+    mode: Option<String>,
+) -> Result<(), String> {
     let local_path = cache_wallpaper_image(&app, &path).await?;
-    set_system_wallpaper(&local_path)
+    let mode = crate::wallpaper::WallpaperMode::parse(mode.as_deref());
+
+    // The Win32 call itself is quick, but the macOS/Linux paths shell out to
+    // osascript / gsettings, so keep them off the async runtime's worker.
+    tauri::async_runtime::spawn_blocking(move || crate::wallpaper::set(&local_path, mode))
+        .await
+        .map_err(|e| format!("Wallpaper task failed: {e}"))?
 }
 
 async fn cache_wallpaper_image(app: &AppHandle, path: &str) -> Result<PathBuf, String> {
@@ -286,6 +363,7 @@ async fn cache_wallpaper_image(app: &AppHandle, path: &str) -> Result<PathBuf, S
         .unwrap_or_else(|| "wallpaper.jpg".into());
 
     let local_path = cache_dir.join(&file_name);
+    let temp_path = cache_dir.join(format!("{file_name}.part"));
 
     // Return cached file if it exists
     if local_path.exists() {
@@ -324,9 +402,20 @@ async fn cache_wallpaper_image(app: &AppHandle, path: &str) -> Result<PathBuf, S
         .await
         .map_err(|e| format!("Failed to read image bytes: {}", e))?;
 
-    tokio::fs::write(&local_path, &bytes)
+    tokio::fs::write(&temp_path, &bytes)
         .await
-        .map_err(|e| format!("Failed to write image file: {}", e))?;
+        .map_err(|e| format!("Failed to write image file: {e}"))?;
+
+    // Rename into place only once the bytes are fully on disk, so an
+    // interrupted download can never be mistaken for a valid cache hit.
+    tokio::fs::rename(&temp_path, &local_path)
+        .await
+        .map_err(|e| {
+            let _ = std::fs::remove_file(&temp_path);
+            format!("Failed to finalize image file: {e}")
+        })?;
+
+    maybe_prune(cache_dir, IMAGE_CACHE_MAX_BYTES).await;
 
     Ok(local_path)
 }
@@ -377,86 +466,6 @@ fn current_platform() -> &'static str {
     {
         "Unknown"
     }
-}
-
-#[cfg(target_os = "macos")]
-fn set_system_wallpaper(path: &Path) -> Result<(), String> {
-    let script = r#"
-on run argv
-  tell application "System Events"
-    set picture of every desktop to item 1 of argv
-  end tell
-end run
-"#;
-
-    let output = Command::new("osascript")
-        .arg("-e")
-        .arg(script)
-        .arg(path)
-        .output()
-        .map_err(|e| format!("Failed to run osascript: {}", e))?;
-
-    if output.status.success() {
-        Ok(())
-    } else {
-        Err(String::from_utf8_lossy(&output.stderr).trim().to_string())
-    }
-}
-
-#[cfg(target_os = "windows")]
-fn set_system_wallpaper(path: &Path) -> Result<(), String> {
-    let script = r#"
-Add-Type -TypeDefinition 'using System.Runtime.InteropServices; public class Wallpaper { [DllImport("user32.dll", SetLastError=true)] public static extern bool SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni); }'
-if (-not [Wallpaper]::SystemParametersInfo(20, 0, $args[0], 3)) { exit 1 }
-"#;
-
-    let output = Command::new("powershell")
-        .args([
-            "-NoProfile",
-            "-NonInteractive",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-Command",
-            script,
-        ])
-        .arg(path)
-        .output()
-        .map_err(|e| format!("Failed to run PowerShell: {}", e))?;
-
-    if output.status.success() {
-        Ok(())
-    } else {
-        Err(String::from_utf8_lossy(&output.stderr).trim().to_string())
-    }
-}
-
-#[cfg(target_os = "linux")]
-fn set_system_wallpaper(path: &Path) -> Result<(), String> {
-    let uri = format!("file://{}", path.to_string_lossy().replace(' ', "%20"));
-    let status = Command::new("gsettings")
-        .args(["set", "org.gnome.desktop.background", "picture-uri", &uri])
-        .status()
-        .map_err(|e| format!("Failed to run gsettings: {}", e))?;
-
-    if !status.success() {
-        return Err("Failed to set GNOME wallpaper".into());
-    }
-
-    let _ = Command::new("gsettings")
-        .args([
-            "set",
-            "org.gnome.desktop.background",
-            "picture-uri-dark",
-            &uri,
-        ])
-        .status();
-
-    Ok(())
-}
-
-#[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
-fn set_system_wallpaper(_path: &Path) -> Result<(), String> {
-    Err("Setting desktop wallpaper is not supported on this platform".into())
 }
 
 /// Proxy wallhaven.cc API requests through Rust backend to bypass CORS.
