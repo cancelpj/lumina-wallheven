@@ -11,7 +11,43 @@ cargo tauri dev           # Full Tauri app (starts Vite + Rust backend)
 cargo tauri build         # Production Tauri build
 ```
 
-No test suite or linter is configured.
+## Working agreements
+
+**A change is not done until these pass:**
+
+```bash
+pnpm install --frozen-lockfile
+pnpm build                                                   # vue-tsc type check + vite build
+cargo test --manifest-path src-tauri/Cargo.toml --lib        # unit tests
+cargo check --manifest-path src-tauri/Cargo.toml --target x86_64-pc-windows-msvc
+```
+
+The Windows target check needs `llvm-rc` on PATH (`apt-get install llvm`) —
+`tauri-winres` compiles the `.ico` for Windows targets.
+
+**Memory is a product constraint, not an accident.** The webview decodes every
+image it renders, so a 4K wallpaper costs ~33 MB of bitmap memory per `<img>`.
+
+- Grid cards use `thumbs.small` (200px). `thumbs.large` (up to 1280px) is only
+  for the detail lightbox.
+- Never point an `<img>` at a full resolution file. Local files go through
+  `fetch_wallpaper_thumbnail`, which produces a bounded 480px JPEG.
+- The grid is virtualised. Do not reintroduce a plain `v-for` over the whole
+  list — infinite scroll appends pages for the life of the session.
+- Caches are bounded and pruned. Do not add unbounded cache writes.
+
+**Setting the wallpaper.**
+
+- Windows goes through `windows` crate calls in
+  [wallpaper.rs](src-tauri/src/wallpaper.rs): registry writes plus
+  `SystemParametersInfoW`. Do not reintroduce a PowerShell or child-process
+  path, and do not use the ANSI `SystemParametersInfoA` — it needs GBK-encoded
+  paths and breaks on non-ASCII directories.
+- macOS uses `osascript`, Linux uses `gsettings`. Both are the supported way to
+  drive those platforms.
+
+**Licence.** The project is MIT (see README). Keep new dependencies MIT or
+Apache-2.0.
 
 ## Architecture
 
