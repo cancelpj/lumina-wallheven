@@ -3,6 +3,8 @@ import { ref, onMounted } from 'vue'
 import { invoke } from '@tauri-apps/api/core'
 import { useDownloadStore } from '@/stores/download'
 import { useToastStore } from '@/stores/toast'
+import { wallhavenApi } from '@/api/wallhaven'
+import type { WallpaperMode } from '@/types/wallhaven'
 
 interface CacheInfo {
   bytes: number
@@ -20,14 +22,32 @@ const saved = ref(false)
 const cacheInfo = ref<CacheInfo | null>(null)
 const cacheLoading = ref(false)
 const cacheClearing = ref(false)
+const wallpaperMode = ref<WallpaperMode>('fill')
+
+const WALLPAPER_MODE_OPTIONS: { value: WallpaperMode; label: string; hint: string }[] = [
+  { value: 'fill', label: '填充', hint: '缩放至铺满屏幕，裁掉溢出的部分' },
+  { value: 'fit', label: '适应', hint: '完整显示整张图片，不裁剪' },
+  { value: 'stretch', label: '拉伸', hint: '忽略原始比例，直接铺满屏幕' },
+  { value: 'tile', label: '平铺', hint: '以原始尺寸重复铺满桌面' },
+  { value: 'center', label: '居中', hint: '以原始尺寸居中显示' },
+  { value: 'span', label: '跨屏', hint: '跨多个显示器延展' },
+]
 
 const API_KEY_STORAGE = 'wallhaven-api-key'
 
 onMounted(() => {
   savedKey.value = localStorage.getItem(API_KEY_STORAGE) || ''
   apiKey.value = savedKey.value
+  wallpaperMode.value = wallhavenApi.getWallpaperMode()
   refreshCacheInfo()
 })
+
+function selectWallpaperMode(mode: WallpaperMode) {
+  wallpaperMode.value = mode
+  wallhavenApi.setWallpaperMode(mode)
+  const label = WALLPAPER_MODE_OPTIONS.find((o) => o.value === mode)?.label ?? mode
+  toast.show(`壁纸填充方式已切换为「${label}」`, { icon: 'wallpaper', tone: 'success' })
+}
 
 function saveApiKey() {
   const key = apiKey.value.trim()
@@ -157,6 +177,30 @@ async function openCacheDir() {
             {{ downloadStore.selectingDir ? '选择中…' : '更改' }}
           </button>
         </div>
+      </section>
+
+      <!-- Wallpaper Fit Mode -->
+      <section class="detail-info-card rounded-2xl p-6">
+        <h2 class="font-headline-md text-on-surface mb-1">壁纸填充方式</h2>
+        <p class="text-body-sm text-modal-secondary mb-4">
+          设置壁纸时应用到所有显示器。Windows 支持全部六种方式；macOS 由系统拉伸填充；Linux 需要 GNOME 环境。
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="option in WALLPAPER_MODE_OPTIONS"
+            :key="option.value"
+            @click="selectWallpaperMode(option.value)"
+            class="rounded-xl px-5 py-2.5 font-headline-md transition-all"
+            :class="wallpaperMode === option.value
+              ? 'bg-primary text-on-primary'
+              : 'detail-info-card text-on-surface hover:bg-white/50'"
+          >
+            {{ option.label }}
+          </button>
+        </div>
+        <p class="text-body-sm text-modal-secondary mt-3">
+          {{ WALLPAPER_MODE_OPTIONS.find((o) => o.value === wallpaperMode)?.hint }}
+        </p>
       </section>
 
       <!-- App Cache -->

@@ -50,11 +50,14 @@ const handleDownload = (e: Event) => {
     :style="{ borderColor: purityBorderColor }"
     @click="openDetail(data)"
   >
-    <!-- Thumbnail -->
+    <!-- Thumbnail: the grid card is small, so use the 200px variant.
+         `thumbs.large` is up to 1280px and costs ~3.7 MB of decoded bitmap
+         per image; the detail lightbox is where the large one belongs. -->
     <img
-      :src="data.thumbs.large || data.thumbs.original"
+      :src="data.thumbs.small || data.thumbs.large || data.thumbs.original"
       :alt="`Wallpaper ${data.id}`"
       loading="lazy"
+      decoding="async"
       class="w-full h-full object-cover"
       draggable="false"
       referrerpolicy="no-referrer"

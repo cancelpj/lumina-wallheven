@@ -158,7 +158,7 @@ export const useDownloadStore = defineStore('download', () => {
       total_bytes: data.file_size,
       speed_bytes: 0,
       state: 'waiting',
-      thumbnail: data.thumbs.large || data.thumbs.original || data.thumbs.small,
+      thumbnail: data.thumbs.small || data.thumbs.large || data.thumbs.original,
     })
 
     activeIds.value.add(data.id)

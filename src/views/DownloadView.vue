@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { convertFileSrc } from '@tauri-apps/api/core'
 import { useDownloadStore } from '@/stores/download'
 import EmptyState from '@/components/common/EmptyState.vue'
+import ThumbImage from '@/components/common/ThumbImage.vue'
 import { useToastStore } from '@/stores/toast'
 import type { DownloadItem } from '@/types/wallhaven'
 
@@ -37,12 +37,6 @@ function progressPercent(received: number, total: number): number {
 function fileLabel(path: string): string {
   const parts = path.split(/[\\/]/)
   return parts[parts.length - 1] || path
-}
-
-function downloadThumbnail(item: DownloadItem): string {
-  if (item.thumbnail) return item.thumbnail
-  if (item.file_path) return convertFileSrc(item.file_path)
-  return ''
 }
 
 async function selectDownloadDir() {
@@ -172,9 +166,9 @@ onMounted(() => {
             class="rounded-2xl border border-black/5 bg-white/60 p-4 backdrop-blur-[18px]"
           >
             <div class="flex items-center gap-4">
-              <img
+              <ThumbImage
                 v-if="item.thumbnail"
-                :src="item.thumbnail"
+                :fallback="item.thumbnail"
                 class="h-12 w-20 rounded-xl border border-black/5 object-cover flex-shrink-0"
               />
               <div class="min-w-0 flex-1">
@@ -211,12 +205,11 @@ onMounted(() => {
             class="rounded-2xl border border-black/5 bg-white/60 p-4 backdrop-blur-[18px]"
           >
             <div class="flex items-center gap-4">
-              <img
-                v-if="downloadThumbnail(item)"
-                :src="downloadThumbnail(item)"
+              <ThumbImage
+                v-if="item.file_path || item.thumbnail"
+                :path="item.file_path"
+                :fallback="item.thumbnail"
                 class="h-16 w-28 rounded-xl border border-black/5 object-cover flex-shrink-0 shadow-sm"
-                draggable="false"
-                referrerpolicy="no-referrer"
               />
               <div
                 v-else

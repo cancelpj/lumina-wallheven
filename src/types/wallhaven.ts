@@ -4,6 +4,12 @@ export interface Thumbs {
   small: string
 }
 
+/**
+ * How the wallpaper is laid out on the desktop.
+ * `system` leaves the OS fill mode untouched.
+ */
+export type WallpaperMode = 'fill' | 'fit' | 'stretch' | 'tile' | 'center' | 'span' | 'system'
+
 export interface WallpaperData {
   id: string
   url: string

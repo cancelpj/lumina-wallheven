@@ -1,7 +1,10 @@
 import { invoke, convertFileSrc } from '@tauri-apps/api/core'
-import type { SearchParams, SearchResponse } from '@/types/wallhaven'
+import type { SearchParams, SearchResponse, WallpaperMode } from '@/types/wallhaven'
 
 const IMAGE_CDN = 'https://w.wallhaven.cc/full'
+const WALLPAPER_MODE_STORAGE = 'wallhaven-wallpaper-mode'
+
+const WALLPAPER_MODES: WallpaperMode[] = ['fill', 'fit', 'stretch', 'tile', 'center', 'span']
 
 class WallhavenAPI {
   async search(params: SearchParams): Promise<SearchResponse> {
@@ -34,7 +37,20 @@ class WallhavenAPI {
   }
 
   async setDesktopWallpaper(path: string): Promise<void> {
-    await invoke('set_desktop_wallpaper', { path })
+    await invoke('set_desktop_wallpaper', {
+      path,
+      mode: this.getWallpaperMode(),
+    })
+  }
+
+  /** The fill mode applied on every wallpaper change. */
+  getWallpaperMode(): WallpaperMode {
+    const raw = localStorage.getItem(WALLPAPER_MODE_STORAGE) as WallpaperMode | null
+    return raw && WALLPAPER_MODES.includes(raw) ? raw : 'fill'
+  }
+
+  setWallpaperMode(mode: WallpaperMode): void {
+    localStorage.setItem(WALLPAPER_MODE_STORAGE, mode)
   }
 }
 
